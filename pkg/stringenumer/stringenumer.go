@@ -1,4 +1,4 @@
-// String enumer generate useful code for enums defined as strings
+// Package stringenumer generate useful code for enums defined as strings
 //
 //	type MyEnum string
 //	const (
@@ -27,20 +27,25 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+// Option is used in the call of Generate to change the behavior
 type Option func(*generator)
 
+// TypeNames is the options used to set the types that code should be generated for
+// At least one type needs to be defined
 func TypeNames(types ...string) Option {
 	return func(g *generator) {
 		g.typeNames = append(g.typeNames, types...)
 	}
 }
 
+// TextUnmarshaling sets if text unarshaling should be generated or not
 func TextUnmarshaling(unmarshalText bool) Option {
 	return func(g *generator) {
 		g.unmarshalText = unmarshalText
 	}
 }
 
+// Paths sets the paths from where code should be read from
 func Paths(paths ...string) Option {
 	return func(g *generator) {
 		g.paths = paths
@@ -57,7 +62,7 @@ func (m multiError) Error() string {
 	return strings.Join(errors, "; ")
 }
 
-// Generate ...
+// Generate returns a reader with generated code
 func Generate(options ...Option) (io.Reader, error) {
 	g := generator{
 		values:  map[string][]value{},
