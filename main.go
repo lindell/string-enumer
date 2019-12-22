@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -10,45 +9,46 @@ import (
 	"strings"
 
 	"github.com/lindell/string-enumer/pkg/stringenumer"
+	"github.com/spf13/pflag"
 )
 
 var (
-	typeNames  = flag.String("type", "", "comma-separated list of type names; must be set")
-	text       = flag.Bool("text", false, "if true, text marshaling methods will be generated. Default: false")
-	outputPath = flag.String("output", "", "output file name; default srcdir/<type>_enumer.go")
+	types      = pflag.StringSliceP("type", "t", nil, "the type name(s), can be multiple, but at least on must be set")
+	text       = pflag.BoolP("text", "T", false, "if set, text unmarshaling methods will be generated. Default: false")
+	outputPath = pflag.StringP("output", "o", "", "output file name; default is stdout")
 )
 
 // Usage is a replacement usage function for the flags package.
 func Usage() {
 	fmt.Fprintf(os.Stderr, "Usage of string-enumer:\n")
-	fmt.Fprintf(os.Stderr, "\tstring-enumer [flags] -type T [directory]\n")
-	fmt.Fprintf(os.Stderr, "\tstring-enumer [flags] -type T files... # Must be a single package\n")
+	fmt.Fprintf(os.Stderr, "\tstring-enumer [flags] --type T --type T2 [directory]\n")
+	fmt.Fprintf(os.Stderr, "\tstring-enumer [flags] --type T --type T2 files... # Must be a single package\n")
 	fmt.Fprintf(os.Stderr, "For more information, see:\n")
 	fmt.Fprintf(os.Stderr, "\thttps://github.com/lindell/string-enumer\n")
 	fmt.Fprintf(os.Stderr, "Flags:\n")
-	flag.PrintDefaults()
+	pflag.PrintDefaults()
 }
 
 func main() {
-	flag.Usage = Usage
-	flag.Parse()
+	pflag.Usage = Usage
+	pflag.Parse()
 
-	if len(*typeNames) == 0 {
-		flag.Usage()
+	if len(*types) == 0 {
+		fmt.Fprintln(os.Stderr, "at least one --type needs to be set")
+		pflag.Usage()
 		os.Exit(2)
 	}
 
-	args := flag.Args()
+	args := pflag.Args()
 	if len(args) == 0 {
-		flag.Usage()
+		fmt.Fprintln(os.Stderr, "a directory or file must be defined")
+		pflag.Usage()
 		os.Exit(2)
 	}
-
-	types := strings.Split(*typeNames, ",")
 
 	r, err := stringenumer.Generate(
 		stringenumer.Paths(args...),
-		stringenumer.TypeNames(types...),
+		stringenumer.TypeNames(*types...),
 		stringenumer.TextUnmarshaling(*text),
 	)
 	if err != nil {
