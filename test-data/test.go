@@ -11,6 +11,6 @@ type Test2 string
 
 const (
 	TestTest2  Test2 = "test"
-	TestHello2 Test  = "hello"
-	TestTest3  Test2 = "test"
+	TestHello2 Test  = "hello2"
+	TestTest3  Test2 = "test3"
 )

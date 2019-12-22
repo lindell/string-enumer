@@ -75,6 +75,10 @@ func Generate(options ...Option) (io.Reader, error) {
 		return nil, g.errors
 	}
 
+	if err := g.validateValues(); err != nil {
+		return nil, err
+	}
+
 	for _, typename := range g.typenames() {
 		g.buildValidStruct(typename)
 		if g.unmarshalText {
@@ -264,6 +268,25 @@ func (g *generator) genDecl(f *file) func(node ast.Node) bool {
 	}
 }
 
+// validateValues ensures that there exist no more than one value of each type
+func (g *generator) validateValues() error {
+	var errors multiError
+	for typeName, v := range g.values {
+		values := map[string]struct{}{}
+		for _, value := range v {
+			if _, ok := values[value.value]; ok {
+				errors = append(errors, fmt.Errorf("the type %s has multiple values of %s", typeName, value.value))
+				break
+			}
+			values[value.value] = struct{}{}
+		}
+	}
+	if len(errors) > 0 {
+		return errors
+	}
+	return nil
+}
+
 func (g *generator) buildHeader() {
 	fmt.Fprintf(&g.headerBuf, "package %s\n\n", g.pkg.name)
 	fmt.Fprintln(&g.headerBuf, "import (")
@@ -282,13 +305,13 @@ func (g *generator) buildHeader() {
 
 func (g *generator) buildValidStruct(name string) {
 	values := g.values[name]
-	g.Printf("var valid%sValues = map[string]struct{}{\n", strings.Title(name))
-	valueLength := maxValueLength(values)
-	for _, value := range filterMultipleValues(values) {
-		g.Printf("	\"%s\": %sstruct{}{},\n", value, strings.Repeat(" ", valueLength-len(value)))
+	g.Printf("var valid%sValues = map[%s]struct{}{\n", name, strings.Title(name))
+	maxNameLength := maxNameLength(values)
+	for _, name := range filterMultipleNames(values) {
+		g.Printf("	%s: %sstruct{}{},\n", name, strings.Repeat(" ", maxNameLength-len(name)))
 	}
 	g.Printf("}\n\n")
-	g.Printf("func Valid%s(val string) bool {\n", strings.Title(name))
+	g.Printf("func Valid%s(val %s) bool {\n", name, strings.Title(name))
 	g.Printf("	_, ok := valid%sValues[val]\n", strings.Title(name))
 	g.Printf("	return ok\n")
 	g.Printf("}\n\n")
@@ -297,7 +320,7 @@ func (g *generator) buildValidStruct(name string) {
 func (g *generator) buildTextUnmarshaling(name string) {
 	g.addImport(`"fmt"`)
 	g.Printf("func (v *%s) UnmarshalText(text []byte) error {\n", strings.Title(name))
-	g.Printf("	if valid := Valid%s(string(text)); !valid {\n", strings.Title(name))
+	g.Printf("	if valid := Valid%s(%s(text)); !valid {\n", name, strings.Title(name))
 	g.Printf("		return fmt.Errorf(\"not valid value for %s: %%s\", text)\n", name)
 	g.Printf("	}\n")
 	g.Printf("	*v = %s(text)\n", name)
@@ -305,10 +328,10 @@ func (g *generator) buildTextUnmarshaling(name string) {
 	g.Printf("}\n\n")
 }
 
-func filterMultipleValues(vv []value) []string {
+func filterMultipleNames(vv []value) []string {
 	tmp := make(map[string]struct{})
 	for _, v := range vv {
-		tmp[v.value] = struct{}{}
+		tmp[v.name] = struct{}{}
 	}
 
 	ret := make([]string, len(tmp))
@@ -321,11 +344,11 @@ func filterMultipleValues(vv []value) []string {
 	return ret
 }
 
-func maxValueLength(vv []value) int {
+func maxNameLength(vv []value) int {
 	max := 0
 	for _, v := range vv {
-		if len(v.value) > max {
-			max = len(v.value)
+		if len(v.name) > max {
+			max = len(v.name)
 		}
 	}
 	return max
