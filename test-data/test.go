@@ -1,16 +1,20 @@
 package test
 
-type Test string
+// MyType is a test type
+type MyType string
 
+// Some MyTypes
 const (
-	TestTest  Test = "test"
-	TestHello Test = "hello"
+	MyTypeTest  MyType = "test"
+	MyTypeTest2 MyType = "hello"
 )
 
-type Test2 string
+// YourType is another test type
+type YourType string
 
+// Some MyTypes and YourTypes
 const (
-	TestTest2  Test2 = "test"
-	TestHello2 Test  = "hello2"
-	TestTest3  Test2 = "test3"
+	YourTypeTest1 YourType = "test"
+	MyTypeTest3   MyType   = "hello2"
+	YourTypeTest2 YourType = "test3"
 )
