@@ -316,7 +316,8 @@ func (g *generator) buildValidStruct(name string) {
 		g.Printf("	%s: %sstruct{}{},\n", name, strings.Repeat(" ", maxNameLength-len(name)))
 	}
 	g.Printf("}\n\n")
-	g.Printf("func Valid%s(val %s) bool {\n", name, strings.Title(name))
+	g.Printf("// Valid%s validates if a value is a valid %s\n", strings.Title(name), name)
+	g.Printf("func Valid%s(val %s) bool {\n", strings.Title(name), name)
 	g.Printf("	_, ok := valid%sValues[val]\n", strings.Title(name))
 	g.Printf("	return ok\n")
 	g.Printf("}\n\n")
@@ -324,6 +325,7 @@ func (g *generator) buildValidStruct(name string) {
 
 func (g *generator) buildTextUnmarshaling(name string) {
 	g.addImport(`"fmt"`)
+	g.Printf("// UnmarshalText takes a text, verifies that it is a correct %s and unmarshals it\n", name)
 	g.Printf("func (v *%s) UnmarshalText(text []byte) error {\n", strings.Title(name))
 	g.Printf("	if valid := Valid%s(%s(text)); !valid {\n", name, strings.Title(name))
 	g.Printf("		return fmt.Errorf(\"not valid value for %s: %%s\", text)\n", name)
