@@ -1,3 +1,4 @@
+[![Go build status](https://github.com/lindell/string-enumer/workflows/Go/badge.svg?branch=master)](https://github.com/lindell/string-enumer/actions?query=branch%3Amaster+workflow%3AGo)
 [![GoDoc](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer?status.svg)](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer)
 [![Go Report Card](https://goreportcard.com/badge/github.com/lindell/string-enumer)](https://goreportcard.com/report/github.com/lindell/string-enumer)
 
