@@ -1,8 +1,7 @@
 [![GoDoc](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer?status.svg)](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer)
 [![Go Report Card](https://goreportcard.com/badge/github.com/lindell/string-enumer)](https://goreportcard.com/report/github.com/lindell/string-enumer)
 
-string-enumer
-----
+## string-enumer
 
 String enumer is a code generator for enums declared as strings, like the example below:
 
@@ -22,26 +21,39 @@ The tool is primarily intended to be used with `go:generate`, but can be used as
 # Example usage with go generate
 
 ```go
-//go:generate string-enumer --text -t MyType -t YourType -o ./generated.go .
-// or 
-//go:generate github.com/lindell/string-enumer --text -t MyType -t YourType -o ./generated.go .
+//go:generate string-enumer --text -t MyType -o ./generated.go .
+// or
+//go:generate github.com/lindell/string-enumer --text -t MyType -o ./generated.go .
 type MyType string
 
 const (
-    MyTypeThis MyType = "this"
-    MyTypeThat MyType = "that"
-)
-
-type YourType string
-
-const (
-    YourTypeThis YourType = "this"
-    YourTypeThat YourType = "that"
+    MyTypeThis      MyType = "this"
+    MyTypeThat      MyType = "that"
+    MyTypeSomething MyType = "other"
 )
 ```
 
-CLI Description:
-----
+Will generate:
+
+```go
+// ValidMyType validates if a value is a valid MyType
+func (v MyType) ValidMyType() bool {
+	...
+}
+
+// MyTypeValues returns a list of all (valid) MyType values
+func MyTypeValues() []MyType {
+	...
+}
+
+// UnmarshalText takes a text, verifies that it is a correct MyType and unmarshals it
+func (v *MyType) UnmarshalText(text []byte) error {
+	...
+}
+```
+
+## CLI Description:
+
 ```
 $ string-enumer --help
 Usage of string-enumer:
