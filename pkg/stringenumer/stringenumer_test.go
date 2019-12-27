@@ -8,7 +8,7 @@ import (
 
 func TestPurity(t *testing.T) {
 	r, err := Generate(
-		Paths("../../test-data/test.go"),
+		Paths("../../testdata/multiple.go"),
 		TypeNames("Test", "Test2"),
 		TextUnmarshaling(true),
 	)
@@ -19,7 +19,7 @@ func TestPurity(t *testing.T) {
 	initialData, _ := ioutil.ReadAll(r)
 	for i := 0; i < 20; i++ {
 		r, err := Generate(
-			Paths("../../test-data/test.go"),
+			Paths("../../testdata/multiple.go"),
 			TypeNames("Test", "Test2"),
 			TextUnmarshaling(true),
 		)
