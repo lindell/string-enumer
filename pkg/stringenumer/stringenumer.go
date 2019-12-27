@@ -85,7 +85,7 @@ func Generate(options ...Option) (io.Reader, error) {
 	}
 
 	for _, typename := range g.typenames() {
-		g.buildValidStruct(typename)
+		g.buildBasics(typename)
 		if g.unmarshalText {
 			g.buildTextUnmarshaling(typename)
 		}
@@ -308,7 +308,7 @@ func (g *generator) buildHeader() {
 	fmt.Fprint(&g.headerBuf, ")\n\n")
 }
 
-func (g *generator) buildValidStruct(name string) {
+func (g *generator) buildBasics(name string) {
 	values := g.values[name]
 	g.Printf("var valid%sValues = map[%s]struct{}{\n", name, strings.Title(name))
 	maxNameLength := maxNameLength(values)
@@ -317,8 +317,8 @@ func (g *generator) buildValidStruct(name string) {
 	}
 	g.Printf("}\n\n")
 	g.Printf("// Valid%s validates if a value is a valid %s\n", strings.Title(name), name)
-	g.Printf("func Valid%s(val %s) bool {\n", strings.Title(name), name)
-	g.Printf("	_, ok := valid%sValues[val]\n", strings.Title(name))
+	g.Printf("func (v %s) Valid%s() bool {\n", name, strings.Title(name))
+	g.Printf("	_, ok := valid%sValues[v]\n", strings.Title(name))
 	g.Printf("	return ok\n")
 	g.Printf("}\n\n")
 }
@@ -327,7 +327,7 @@ func (g *generator) buildTextUnmarshaling(name string) {
 	g.addImport(`"fmt"`)
 	g.Printf("// UnmarshalText takes a text, verifies that it is a correct %s and unmarshals it\n", name)
 	g.Printf("func (v *%s) UnmarshalText(text []byte) error {\n", strings.Title(name))
-	g.Printf("	if valid := Valid%s(%s(text)); !valid {\n", name, strings.Title(name))
+	g.Printf("	if valid := %s(text).Valid%s(); !valid {\n", strings.Title(name), name)
 	g.Printf("		return fmt.Errorf(\"not valid value for %s: %%s\", text)\n", name)
 	g.Printf("	}\n")
 	g.Printf("	*v = %s(text)\n", name)

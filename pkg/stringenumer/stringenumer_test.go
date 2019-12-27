@@ -29,7 +29,7 @@ func TestPurity(t *testing.T) {
 		data, _ := ioutil.ReadAll(r)
 
 		if !bytes.Equal(data, initialData) {
-			t.Fatal("different runs of Generate does not reslut in the same output")
+			t.Fatal("different runs of Generate does not result in the same output")
 		}
 	}
 }
