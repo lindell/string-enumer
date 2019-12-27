@@ -28,15 +28,9 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatalf("building string-enumer: %s", err)
 	}
 
-	fd, err := os.Open("testdata")
+	names, err := readDir("testdata")
 	if err != nil {
-		t.Fatal(err)
-	}
-	defer fd.Close()
-
-	names, err := fd.Readdirnames(-1)
-	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("could not read files in directory: %s", err)
 	}
 
 	for _, name := range names {
@@ -50,11 +44,14 @@ func compileAndRun(t *testing.T, dir, binPath, fileName string) {
 	t.Logf("run: %s\n", fileName)
 
 	sourcePath := filepath.Join(dir, fileName)
+
+	// Copy file to the temporary directory
 	err := copy(sourcePath, filepath.Join("testdata", fileName))
 	if err != nil {
 		t.Fatalf("copying file to temporary directory: %s", err)
 	}
 
+	// Get parameters (except input and output file to be used)
 	extraParameters, err := getExtraParameters(sourcePath)
 	if err != nil {
 		t.Fatalf("copying file to temporary directory: %s", err)
@@ -62,6 +59,8 @@ func compileAndRun(t *testing.T, dir, binPath, fileName string) {
 
 	outputName := fmt.Sprintf("%d", rand.Int())
 	outputPath := filepath.Join(dir, outputName+"_output.go")
+
+	// Run the code generation
 	params := []string{"--output", outputPath, sourcePath}
 	params = append(params, extraParameters...)
 	err = run(binPath, params...)
@@ -69,6 +68,7 @@ func compileAndRun(t *testing.T, dir, binPath, fileName string) {
 		t.Fatalf("could not run string-enumer: %s", err)
 	}
 
+	// Run the main() function in the source file, with the generated code attached
 	err = run("go", "run", sourcePath, outputPath)
 	if err != nil {
 		t.Fatal(err)
@@ -77,6 +77,7 @@ func compileAndRun(t *testing.T, dir, binPath, fileName string) {
 
 var extraParameterRegexp = regexp.MustCompile("// extra-parameters: ([^\n]+)")
 
+// getExtraParameters gets extra parameters specified in a source file
 func getExtraParameters(filepath string) ([]string, error) {
 	b, err := ioutil.ReadFile(filepath)
 	if err != nil {
@@ -89,6 +90,17 @@ func getExtraParameters(filepath string) ([]string, error) {
 	}
 
 	return strings.Split(string(match[1]), " "), nil
+}
+
+// readDir reads and returns all files in a directory
+func readDir(path string) ([]string, error) {
+	fd, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer fd.Close()
+
+	return fd.Readdirnames(-1)
 }
 
 // copy copies the from file to the to file.
