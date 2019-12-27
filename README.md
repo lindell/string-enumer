@@ -10,8 +10,9 @@ String enumer is a code generator for enums declared as strings, like the exampl
 type MyType string
 
 const (
-    MyTypeThis MyType = "this"
-    MyTypeThat MyType = "that"
+    MyTypeThis  MyType = "this"
+    MyTypeThat  MyType = "that"
+    MyTypeOther MyType = "some-other"
 )
 ```
 
@@ -28,9 +29,9 @@ The tool is primarily intended to be used with `go:generate`, but can be used as
 type MyType string
 
 const (
-    MyTypeThis      MyType = "this"
-    MyTypeThat      MyType = "that"
-    MyTypeSomething MyType = "other"
+    MyTypeThis  MyType = "this"
+    MyTypeThat  MyType = "that"
+    MyTypeOther MyType = "some-other"
 )
 ```
 
