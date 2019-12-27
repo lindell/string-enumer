@@ -305,15 +305,16 @@ func (g *generator) buildHeader() {
 	for _, imp := range imports {
 		fmt.Fprintln(&g.headerBuf, "	"+imp)
 	}
-	fmt.Fprint(&g.headerBuf, ")\n\n")
+	fmt.Fprint(&g.headerBuf, ")\n")
 }
 
 func (g *generator) buildBasics(name string) {
 	values := g.values[name]
-	g.Printf("var valid%sValues = map[%s]struct{}{\n", name, strings.Title(name))
+	g.Printf("\n// valid%sValues contains a map of all valid %s values for easy lookup\n", strings.Title(name), name)
+	g.Printf("var valid%sValues = map[%s]struct{}{\n", strings.Title(name), name)
 	maxNameLength := maxNameLength(values)
-	for _, name := range filterMultipleNames(values) {
-		g.Printf("	%s: %sstruct{}{},\n", name, strings.Repeat(" ", maxNameLength-len(name)))
+	for _, v := range values {
+		g.Printf("	%s: %sstruct{}{},\n", v.name, strings.Repeat(" ", maxNameLength-len(v.name)))
 	}
 	g.Printf("}\n\n")
 	g.Printf("// Valid%s validates if a value is a valid %s\n", strings.Title(name), name)
@@ -321,18 +322,26 @@ func (g *generator) buildBasics(name string) {
 	g.Printf("	_, ok := valid%sValues[v]\n", strings.Title(name))
 	g.Printf("	return ok\n")
 	g.Printf("}\n\n")
+	g.Printf("// %sValues returns a list of all (valid) %s values\n", strings.Title(name), name)
+	g.Printf("func %sValues() []%s {\n", strings.Title(name), name)
+	g.Printf("	return []%s{\n", name)
+	for _, v := range values {
+		g.Printf("		%s,\n", v.name)
+	}
+	g.Printf("	}\n")
+	g.Printf("}\n")
 }
 
 func (g *generator) buildTextUnmarshaling(name string) {
 	g.addImport(`"fmt"`)
-	g.Printf("// UnmarshalText takes a text, verifies that it is a correct %s and unmarshals it\n", name)
+	g.Printf("\n// UnmarshalText takes a text, verifies that it is a correct %s and unmarshals it\n", name)
 	g.Printf("func (v *%s) UnmarshalText(text []byte) error {\n", strings.Title(name))
 	g.Printf("	if valid := %s(text).Valid%s(); !valid {\n", strings.Title(name), name)
 	g.Printf("		return fmt.Errorf(\"not valid value for %s: %%s\", text)\n", name)
 	g.Printf("	}\n")
 	g.Printf("	*v = %s(text)\n", name)
 	g.Printf("	return nil\n")
-	g.Printf("}\n\n")
+	g.Printf("}\n")
 }
 
 func filterMultipleNames(vv []value) []string {
