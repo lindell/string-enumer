@@ -4,22 +4,12 @@
 
 ## string-enumer
 
-String enumer is a code generator for enums declared as strings, like the example below:
+String enumer is a code generator for enums declared as strings.
 
-```go
-type Country string
+The function `func (v X) ValidX() bool` will always be generated on the defined types together with `func XValues() []X`. But options to generate more code exist.
+It is especially useful with the `--text` option, that generates an `UnmarshalText` function which forces any unmarshaling of the type (via for JSON/XML/etc.) to be limited to the defined types.
 
-const (
-	CountryCanada       Country = "CA"
-	CountryChina        Country = "CN"
-	CountrySweden       Country = "SE"
-	CountryUnitedStates Country = "US"
-)
-```
-
-The function `ValidCountry(string) bool` will always be generated. But options to generate more code exist.
-
-The tool is primarily intended to be used with `go:generate`, but can be used as a package together with other go code.
+The tool is primarily intended to be used with [go:generate](https://blog.golang.org/generate), but can be used as a separate CLI tool.
 
 # Example usage with go generate
 
