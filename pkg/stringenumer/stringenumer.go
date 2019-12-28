@@ -364,6 +364,10 @@ func filterMultipleNames(vv []value) []string {
 	return ret
 }
 
+func unused() string {
+	return "hello"
+}
+
 func maxNameLength(vv []value) int {
 	max := 0
 	for _, v := range vv {
