@@ -23,6 +23,7 @@ import (
 	"log"
 	"sort"
 	"strings"
+	"unicode/utf8"
 
 	"golang.org/x/tools/go/packages"
 )
@@ -293,19 +294,22 @@ func (g *generator) validateValues() error {
 }
 
 func (g *generator) buildHeader() {
-	fmt.Fprintf(&g.headerBuf, "package %s\n\n", g.pkg.name)
-	fmt.Fprintln(&g.headerBuf, "import (")
+	fmt.Fprintf(&g.headerBuf, "package %s\n", g.pkg.name)
 
-	// Sort imports by name
-	imports := make([]string, 0, len(g.imports))
-	for imp := range g.imports {
-		imports = append(imports, imp)
-	}
+	if len(g.imports) > 0 {
+		fmt.Fprintln(&g.headerBuf, "\nimport (")
 
-	for _, imp := range imports {
-		fmt.Fprintln(&g.headerBuf, "	"+imp)
+		// Sort imports by name
+		imports := make([]string, 0, len(g.imports))
+		for imp := range g.imports {
+			imports = append(imports, imp)
+		}
+
+		for _, imp := range imports {
+			fmt.Fprintln(&g.headerBuf, "	"+imp)
+		}
+		fmt.Fprint(&g.headerBuf, ")\n")
 	}
-	fmt.Fprint(&g.headerBuf, ")\n")
 }
 
 func (g *generator) buildBasics(name string) {
@@ -314,7 +318,7 @@ func (g *generator) buildBasics(name string) {
 	g.Printf("var valid%sValues = map[%s]struct{}{\n", strings.Title(name), name)
 	maxNameLength := maxNameLength(values)
 	for _, v := range values {
-		g.Printf("	%s: %sstruct{}{},\n", v.name, strings.Repeat(" ", maxNameLength-len(v.name)))
+		g.Printf("	%s: %sstruct{}{},\n", v.name, strings.Repeat(" ", maxNameLength-utf8.RuneCountInString(v.name)))
 	}
 	g.Printf("}\n\n")
 	g.Printf("// Valid%s validates if a value is a valid %s\n", strings.Title(name), name)
@@ -364,7 +368,7 @@ func maxNameLength(vv []value) int {
 	max := 0
 	for _, v := range vv {
 		if len(v.name) > max {
-			max = len(v.name)
+			max = utf8.RuneCountInString(v.name)
 		}
 	}
 	return max

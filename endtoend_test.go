@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"go/format"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -68,6 +71,10 @@ func compileAndRun(t *testing.T, dir, binPath, fileName string) {
 		t.Fatalf("could not run string-enumer: %s", err)
 	}
 
+	if err := goFmtVerify(outputPath); err != nil {
+		t.Errorf("could not verify that code is go formated: %s", err)
+	}
+
 	// Run the main() function in the source file, with the generated code attached
 	err = run("go", "run", sourcePath, outputPath)
 	if err != nil {
@@ -101,6 +108,22 @@ func readDir(path string) ([]string, error) {
 	defer fd.Close()
 
 	return fd.Readdirnames(-1)
+}
+
+// goFmtVerify verifies that the generated code is go formate
+func goFmtVerify(path string) error {
+	raw, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	formated, err := format.Source(raw)
+	if err != nil {
+		return err
+	}
+	if !bytes.Equal(raw, formated) {
+		return errors.New("code is not go formated")
+	}
+	return nil
 }
 
 // copy copies the from file to the to file.
