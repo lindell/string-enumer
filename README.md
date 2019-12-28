@@ -7,49 +7,51 @@
 String enumer is a code generator for enums declared as strings, like the example below:
 
 ```go
-type MyType string
+type Country string
 
 const (
-    MyTypeThis  MyType = "this"
-    MyTypeThat  MyType = "that"
-    MyTypeOther MyType = "some-other"
+	CountryCanada       Country = "CA"
+	CountryChina        Country = "CN"
+	CountrySweden       Country = "SE"
+	CountryUnitedStates Country = "US"
 )
 ```
 
-The function `ValidMyType(string) bool` will always be generated. But options to generate more code exist.
+The function `ValidCountry(string) bool` will always be generated. But options to generate more code exist.
 
 The tool is primarily intended to be used with `go:generate`, but can be used as a package together with other go code.
 
 # Example usage with go generate
 
 ```go
-//go:generate string-enumer --text -t MyType -o ./generated.go .
+//go:generate string-enumer --text -t Country -o ./generated.go .
 // or
-//go:generate github.com/lindell/string-enumer --text -t MyType -o ./generated.go .
-type MyType string
+//go:generate github.com/lindell/string-enumer --text -t Country -o ./generated.go .
+type Country string
 
 const (
-    MyTypeThis  MyType = "this"
-    MyTypeThat  MyType = "that"
-    MyTypeOther MyType = "some-other"
+	CountryCanada       Country = "CA"
+	CountryChina        Country = "CN"
+	CountrySweden       Country = "SE"
+	CountryUnitedStates Country = "US"
 )
 ```
 
 Will generate:
 
 ```go
-// ValidMyType validates if a value is a valid MyType
-func (v MyType) ValidMyType() bool {
+// ValidCountry validates if a value is a valid Country
+func (v Country) ValidCountry() bool {
 	...
 }
 
-// MyTypeValues returns a list of all (valid) MyType values
-func MyTypeValues() []MyType {
+// CountryValues returns a list of all (valid) Country values
+func CountryValues() []Country {
 	...
 }
 
-// UnmarshalText takes a text, verifies that it is a correct MyType and unmarshals it
-func (v *MyType) UnmarshalText(text []byte) error {
+// UnmarshalText takes a text, verifies that it is a correct Country and unmarshals it
+func (v *Country) UnmarshalText(text []byte) error {
 	...
 }
 ```
