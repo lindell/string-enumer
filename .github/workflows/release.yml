@@ -20,13 +20,13 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Build Windows
-        run: GO111MODULE=on CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build $(BUILD_FLAGS) -o ./bin/string-enumer.exe ./main.go
+        run: GO111MODULE=on CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ./bin/string-enumer.exe ./main.go
 
       - name: Build Linux
-        run: GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BUILD_FLAGS) -o ./bin/string-enumer ./main.go
+        run: GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/string-enumer ./main.go
 
       - name: Build Mac
-        run: GO111MODULE=on CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build $(BUILD_FLAGS) -o ./bin/string-enumer-mac ./main.go
+        run: GO111MODULE=on CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ./bin/string-enumer-mac ./main.go
 
       - name: Create Release
         id: create_release
