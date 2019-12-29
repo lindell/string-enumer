@@ -17,5 +17,5 @@ func Example() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	io.Copy(os.Stdout, r)
+	_, _ = io.Copy(os.Stdout, r)
 }
