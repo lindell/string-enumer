@@ -56,9 +56,9 @@ func Paths(paths ...string) Option {
 type multiError []error
 
 func (m multiError) Error() string {
-	var errors []string
-	for _, err := range m {
-		errors = append(errors, err.Error())
+	errors := make([]string, len(m))
+	for i := range m {
+		errors[i] = m[i].Error()
 	}
 	return strings.Join(errors, "; ")
 }
@@ -346,22 +346,6 @@ func (g *generator) buildTextUnmarshaling(name string) {
 	g.Printf("	*v = %s(text)\n", name)
 	g.Printf("	return nil\n")
 	g.Printf("}\n")
-}
-
-func filterMultipleNames(vv []value) []string {
-	tmp := make(map[string]struct{})
-	for _, v := range vv {
-		tmp[v.name] = struct{}{}
-	}
-
-	ret := make([]string, len(tmp))
-	i := 0
-	for v := range tmp {
-		ret[i] = v
-		i++
-	}
-	sort.Strings(ret)
-	return ret
 }
 
 func maxNameLength(vv []value) int {
