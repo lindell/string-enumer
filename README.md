@@ -2,9 +2,11 @@
   🧵 string-enumer
 </h1>
 
-[![Go build status](https://github.com/lindell/string-enumer/workflows/Go/badge.svg?branch=master)](https://github.com/lindell/string-enumer/actions?query=branch%3Amaster+workflow%3AGo)
-[![GoDoc](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer?status.svg)](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer)
-[![Go Report Card](https://goreportcard.com/badge/github.com/lindell/string-enumer)](https://goreportcard.com/report/github.com/lindell/string-enumer)
+<div align="center">
+	<a href="https://github.com/lindell/string-enumer/actions?query=branch%3Amaster+workflow%3AGo"><img alt="Go build status" src="https://github.com/lindell/string-enumer/workflows/Go/badge.svg?branch=master" /></a>
+		<a href="https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer"><img alt="GoDoc" src="https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer?status.svg" /></a>
+		<a href="https://goreportcard.com/report/github.com/lindell/string-enumer"><img alt="Go Report Card" src="https://goreportcard.com/badge/github.com/lindell/string-enumer" /></a>
+</div>
 
 String enumer is a golang code generator for enums declared as strings.
 
