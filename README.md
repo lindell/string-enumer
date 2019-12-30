@@ -1,10 +1,12 @@
+<h1 align="center">
+  🧵 string-enumer
+</h1>
+
 [![Go build status](https://github.com/lindell/string-enumer/workflows/Go/badge.svg?branch=master)](https://github.com/lindell/string-enumer/actions?query=branch%3Amaster+workflow%3AGo)
 [![GoDoc](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer?status.svg)](https://godoc.org/github.com/lindell/string-enumer/pkg/stringenumer)
 [![Go Report Card](https://goreportcard.com/badge/github.com/lindell/string-enumer)](https://goreportcard.com/report/github.com/lindell/string-enumer)
 
-## string-enumer
-
-String enumer is a code generator for enums declared as strings.
+String enumer is a golang code generator for enums declared as strings.
 
 The function `func (v X) ValidX() bool` will always be generated on the defined types together with `func XValues() []X`. But options to generate more code exist.
 It is especially useful with the `--text` option, that generates an `UnmarshalText` function which forces any unmarshaling of the type (via for JSON/XML/etc.) to be limited to the defined types.
