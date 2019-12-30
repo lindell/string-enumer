@@ -21,7 +21,7 @@ The tool is primarily intended to be used with [go:generate](https://blog.golang
 ```go
 //go:generate string-enumer --text -t Country -o ./generated.go .
 // or
-//go:generate github.com/lindell/string-enumer --text -t Country -o ./generated.go .
+//go:generate go run github.com/lindell/string-enumer --text -t Country -o ./generated.go .
 type Country string
 
 const (
