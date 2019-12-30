@@ -357,3 +357,7 @@ func maxNameLength(vv []value) int {
 	}
 	return max
 }
+
+func test() string {
+	return "test"
+}
