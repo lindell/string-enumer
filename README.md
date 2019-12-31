@@ -32,7 +32,7 @@ const (
 )
 ```
 
-Will generate:
+When you run `go generate` for that package, it will generate:
 
 ```go
 // ValidCountry validates if a value is a valid Country
@@ -50,6 +50,8 @@ func (v *Country) UnmarshalText(text []byte) error {
 	...
 }
 ```
+
+([Please click this link for a real example at Go Playgrounds example](https://play.golang.org/p/5Sg2yl0Z5x_L))
 
 ## CLI Description:
 
