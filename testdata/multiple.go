@@ -25,29 +25,29 @@ const (
 )
 
 func main() {
-	if ok := TestTest.ValidTest(); !ok {
+	if ok := TestTest.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
-	if ok := TestTest2.ValidTest(); !ok {
+	if ok := TestTest2.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
-	if ok := Test2Test.ValidTest2(); !ok {
+	if ok := Test2Test.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test2"))
 	}
-	if ok := Test2Test2.ValidTest2(); !ok {
+	if ok := Test2Test2.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test2"))
 	}
-	if ok := Test2Test3.ValidTest2(); !ok {
+	if ok := Test2Test3.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test2"))
 	}
 
 	nonValid := Test("test3")
-	if ok := nonValid.ValidTest(); ok {
+	if ok := nonValid.Valid(); ok {
 		panic(fmt.Sprintf("should not be valid Test"))
 	}
 
 	valid := Test2("test3")
-	if ok := valid.ValidTest2(); !ok {
+	if ok := valid.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test2"))
 	}
 }

@@ -16,15 +16,15 @@ const (
 )
 
 func main() {
-	if ok := TestTest.ValidTest(); !ok {
+	if ok := TestTest.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
-	if ok := TestÅ.ValidTest(); !ok {
+	if ok := TestÅ.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
 
 	nonValid := Test("test2")
-	if ok := nonValid.ValidTest(); ok {
+	if ok := nonValid.Valid(); ok {
 		panic(fmt.Sprintf("should not be valid Test"))
 	}
 
