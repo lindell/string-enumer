@@ -1,4 +1,4 @@
-package main
+package main_test
 
 import (
 	"bytes"
@@ -26,7 +26,7 @@ func TestEndToEnd(t *testing.T) {
 	binPath := filepath.Join(tmpDir, "string-enumer")
 
 	// Compile
-	run("go", "build", "-o", binPath)
+	err = run("go", "build", "-o", binPath)
 	if err != nil {
 		t.Fatalf("building string-enumer: %s", err)
 	}
@@ -37,6 +37,7 @@ func TestEndToEnd(t *testing.T) {
 	}
 
 	for _, name := range names {
+		name := name
 		t.Run(name, func(t *testing.T) {
 			compileAndRun(t, tmpDir, binPath, name)
 		})

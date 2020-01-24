@@ -555,21 +555,21 @@ const (
 )
 
 func main() {
-	if ok := Test1.ValidTest(); !ok {
+	if ok := Test1.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
-	if ok := Test36.ValidTest(); !ok {
+	if ok := Test36.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
-	if ok := Test542.ValidTest(); !ok {
-		panic(fmt.Sprintf("should be valid Test"))
-	}
-
-	if ok := Test("200").ValidTest(); !ok {
+	if ok := Test542.Valid(); !ok {
 		panic(fmt.Sprintf("should be valid Test"))
 	}
 
-	if ok := Test("600").ValidTest(); ok {
+	if ok := Test("200").Valid(); !ok {
+		panic(fmt.Sprintf("should be valid Test"))
+	}
+
+	if ok := Test("600").Valid(); ok {
 		panic(fmt.Sprintf("should not be valid Test"))
 	}
 }

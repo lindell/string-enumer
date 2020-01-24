@@ -67,8 +67,10 @@ func main() {
 		}
 	}
 
-	io.Copy(output, generateDontEdit())
-	io.Copy(output, r)
+	input := io.MultiReader(generateDontEdit(), r)
+	if _, err := io.Copy(output, input); err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func generateDontEdit() io.Reader {
