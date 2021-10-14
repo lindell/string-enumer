@@ -318,7 +318,7 @@ func (g *generator) buildBasics(name string) {
 	g.Printf("var valid%sValues = map[%s]struct{}{\n", strings.Title(name), name)
 	maxNameLength := maxNameLength(values)
 	for _, v := range values {
-		g.Printf("	%s: %sstruct{}{},\n", v.name, strings.Repeat(" ", maxNameLength-utf8.RuneCountInString(v.name)))
+		g.Printf("	%s: %s{},\n", v.name, strings.Repeat(" ", maxNameLength-utf8.RuneCountInString(v.name)))
 	}
 	g.Printf("}\n\n")
 	g.Printf("// Valid validates if a value is a valid %s\n", name)
