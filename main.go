@@ -59,7 +59,7 @@ func main() {
 	if *outputPath == "" {
 		output = os.Stdout
 	} else {
-		file, err := os.OpenFile(*outputPath, os.O_RDWR|os.O_CREATE, 0644)
+		file, err := os.OpenFile(*outputPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 		output = file
 		defer file.Close()
 		if err != nil {
